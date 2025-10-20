@@ -42,7 +42,10 @@ const RelatedDoctors = ({speciality , docId}) => {
         {/* Info Section */}
         <div className="p-4">
           <div className="flex items-center justify-between text-sm mb-2">
-            <p className="text-green-600 font-semibold">● Available</p>
+           <p className={`font-semibold ${item.available ? 'text-green-600' : 'text-gray-500'}`}>
+  ● {item.available ? 'Available' : 'Not Available'}
+</p>
+
             <p className="text-gray-500">⭐ 4.9</p>
           </div>
           <p className="font-bold text-gray-800">{item.name}</p>

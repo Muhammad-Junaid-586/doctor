@@ -1,12 +1,26 @@
 import React from "react";
 import { assets } from "../assets/assets_frontend/assets";
 import { NavLink, useNavigate } from "react-router-dom";
+import { AppContext } from "../context/AppContext";
+import { useEffect } from "react";
 
 const Navbar = () => {
+  const {token , setToken , userData}  = React.useContext(AppContext);
   const navigate = useNavigate();
   const [showMenu, setShowMenu] = React.useState(false);
-  const [token, setToken] = React.useState(true);
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setToken(false);
+    navigate("/");
+  };
+
+  useEffect(()=>{
+      if (token) {
+        navigate("/");
+      }
+  }, [token])
+  
   return (
     <div className="flex justify-between items-center py-4 mb-5 text-sm border-b border-gray-300 px-6 md:px-12 relative">
       {/* Logo */}
@@ -55,11 +69,11 @@ const Navbar = () => {
 
       {/* Right Section */}
       <div className="flex items-center gap-4">
-        {token ? (
+        {token && userData ? (
           <div className="flex items-center gap-2 cursor-pointer group relative">
             <img
-              className="w-8 h-8 rounded-full object-cover"
-              src={assets.profile_pic}
+              className="w-8 h-8 rounded-full object-cover bg-indigo-50"
+              src={userData.image}
               alt="Profile"
             />
             <img className="w-2.5" src={assets.dropdown_icon} alt="Dropdown" />
@@ -80,7 +94,7 @@ const Navbar = () => {
                   My Appointments
                 </p>
                 <p
-                  onClick={() => setToken(false)}
+                  onClick={() => handleLogout()}
                   className="hover:text-black cursor-pointer"
                 >
                   Logout
@@ -178,7 +192,7 @@ const Navbar = () => {
               </p>
               <p
                 onClick={() => {
-                  setToken(false);
+                  handleLogout();
                   setShowMenu(false);
                 }}
                 className="hover:text-red-500 cursor-pointer"

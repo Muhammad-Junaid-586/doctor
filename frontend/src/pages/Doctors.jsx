@@ -38,7 +38,7 @@ const Doctors = () => {
             <p onClick={()=>speciality==="Neurologist"? navigate("/doctors") : navigate('/doctors/Neurologist')} className={`w-[90vw] sm:w-auto pl-3 py-1.5 border border-gray-300 rounded transition-all cursor-pointer ${speciality === "Neurologist"? "bg-indigo-100 text-black" : ""}`}>Neurologist</p>
             <p onClick={()=>speciality==="Gastroenterologist"? navigate("/doctors") : navigate('/doctors/Gastroenterologist')} className={`w-[90vw] sm:w-auto px-3 py-1.5 border border-gray-300 rounded transition-all cursor-pointer ${speciality === "Gastroenterologist"? "bg-indigo-100 text-black" : ""}`}>Gastroenterologist</p>
           </div>
-          <div className='w-[90vw]  sm:grid mx-auto grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 '>
+          <div className='w-[90vw]  sm:grid mx-auto grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3'>
             {
               filterDoc.map((item, index) => (
       <div onClick={() => navigate(`/appointment/${item._id}`)}
@@ -55,7 +55,10 @@ const Doctors = () => {
         {/* Info Section */}
         <div className="p-4">
           <div className="flex items-center justify-between text-sm mb-2">
-            <p className="text-green-600 font-semibold">● Available</p>
+            <p className={`font-semibold ${item.available ? 'text-green-600' : 'text-gray-500'}`}>
+  ● {item.available ? 'Available' : 'Not Available'}
+</p>
+
             <p className="text-gray-500">⭐ 4.9</p>
           </div>
           <p className="font-bold text-gray-800">{item.name}</p>

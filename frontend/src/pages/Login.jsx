@@ -1,6 +1,11 @@
 import React, { useState } from "react";
+import { useContext } from "react";
+import { AppContext } from "../context/AppContext";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const Login = () => {
+  const {token, setToken , backendUrl} = useContext(AppContext);
   // State: determines which form to show
   const [isSignUp, setIsSignUp] = useState(true);
 
@@ -21,17 +26,49 @@ const Login = () => {
   };
 
   // Handle form submission
-  const handleSubmit = (e) => {
-    e.preventDefault();
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  try {
     if (isSignUp) {
-      console.log("Sign Up Data:", formData);
-    } else {
-      console.log("Login Data:", {
+      const { data } = await axios.post(`${backendUrl}/api/user/register`, {
+        name: formData.fullName,
         email: formData.email,
         password: formData.password,
       });
+      console.log(data);
+      console.log(formData);
+      
+
+      if (data.success) {
+        localStorage.setItem("token", data.token);
+        setToken(data.token);
+        toast.success("Registered successfully!");
+      } else {
+        toast.error(data.message);
+      }
+
+    } else {
+      const { data } = await axios.post(`${backendUrl}/api/user/login`, {
+        email: formData.email,
+        password: formData.password,
+      });
+
+      if (data.success) {
+        localStorage.setItem("token", data.token);
+        setToken(data.token);
+        toast.success("Logged in successfully!");
+      } else {
+        toast.error(data.message);
+      }
     }
-  };
+
+  } catch (error) {
+    console.error(error);
+    toast.error(error.response?.data?.message || error.message);
+  }
+};
+
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
